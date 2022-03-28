@@ -22,9 +22,12 @@
 using namespace std;
 
 void Scene::build() {
-	width = 400;
-	height = 400;
-	spp = 400;
+	cout << "Width: ";
+	cin >> width;
+	cout << "Height: ";
+	cin >> height;
+	cout << "Spp: ";
+	cin >> spp;
 
 	Material* red = new Lambertian(new ConstantTexture(Vector3f(0.65f, 0.05f, 0.05f)));
 	Material* white = new Lambertian(new ConstantTexture(Vector3f(0.73f, 0.73f, 0.73f)));
@@ -138,7 +141,6 @@ void Scene::render() {
 Vector3f Scene::color(const Ray3f& ray, int depth) {
 	HitRecord hrec;
 	if (bvh->hit(ray, 0.001f, FLT_MAX, hrec)) {
-	//if (world.hit(ray, 0.001f, FLT_MAX, hrec)) {
 		ScatterRecord srec;
 		Vector3f emitted = hrec.material->emitted(hrec.u, hrec.v, hrec.p);
 		if (depth < 50 && hrec.material->scatter(ray, hrec, srec)) {
