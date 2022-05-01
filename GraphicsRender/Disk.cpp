@@ -31,8 +31,13 @@ float DiskXZ::pdfValue(const Ray3f& ray) const {
     } else return 0.0f;
 }
 
-Vector3f DiskXZ::random(const Vector3f& origin) const {
-    Vector2f r = randomInUnitCircle();
-    Vector3f p = center + (radius - 0.1f) * Vector3f(r.x(), 0, r.y());
+Vector3f DiskXZ::random(const Vector3f& origin, Sampler& sampler) const {
+    Vector2f r;
+    float diam = 2 * radius - 0.1f;
+    do {
+        r = sampler.generate2D(diam, diam);
+        r -= Vector2f(diam / 2.0f, diam / 2.0f);
+    } while (r.length() >= diam / 2.0f);
+    Vector3f p = center + Vector3f(r.x(), 0, r.y());
     return p - origin;
 }

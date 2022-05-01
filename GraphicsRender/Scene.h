@@ -3,11 +3,16 @@
 #include "ObjectList.h"
 #include "BVHNode.h"
 #include "Camera.h"
+#include "Sampler.h"
 
 class Scene {
 public:
-	Scene() : bvh(nullptr), camera(nullptr), width(0), height(0), spp(0), total(0) {}
+	Scene() : samplerLight(nullptr), samplerUniform(nullptr), samplerRandom(nullptr), samplerBlueNoise(nullptr),
+		bvh(nullptr), camera(nullptr), width(0), height(0), spp(0), total(0) {}
 	~Scene() {
+		delete samplerUniform;
+		delete samplerRandom;
+		delete samplerBlueNoise;
 		delete bvh;
 		delete camera;
 		for (Material* material : materials) {
@@ -24,11 +29,17 @@ private:
 	ObjectList light;
 	BVHNode* bvh;
 	Camera* camera;
+	Sampler* samplerLight;
+	Sampler* samplerUniform;
+	Sampler* samplerRandom;
+	Sampler* samplerBlueNoise;
 	vector<Vector3f> buffer;
 	vector<Material*> materials;
 	int width, height, spp;
 	mutex mut;
 	int total;
 
+	void buildCornellBox();
+	void buildSampler();
 	static void renderThread(Scene* scene, int y0, int y1);
 };

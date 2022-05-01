@@ -1,7 +1,6 @@
 #include "Scene.h"
 #include <iostream>
 #include <fstream>
-
 #include "BVHNode.h"
 #include "FlipNormalObject.h"
 #include "Rectangle.h"
@@ -19,6 +18,9 @@
 #include "TriPyramid.h"
 #include "MeshTriangle.h"
 #include "ImageTexture.h"
+#include "SamplerUniform.h"
+#include "SamplerRandom.h"
+#include "SamplerBlueNoise.h"
 using namespace std;
 
 void Scene::build() {
@@ -28,7 +30,83 @@ void Scene::build() {
 	cin >> height;
 	cout << "Spp: ";
 	cin >> spp;
+	cout << "Choose a sampler(1-uniform, 2-random, 3-bluenoise): ";
+	int choice;
+	cin >> choice;
+	samplerUniform = new SamplerUniform(spp);
+	samplerRandom = new SamplerRandom(spp);
+	samplerBlueNoise = new SamplerBlueNoise(spp);
+	switch (choice) {
+	case 1: samplerLight = samplerUniform; break;
+	case 2: samplerLight = samplerRandom; break;
+	case 3: samplerLight = samplerBlueNoise; break;
+	default:
+		samplerLight = samplerUniform;
+		break;
+	}
+	//buildCornellBox();
+	buildSampler();
+}
 
+void Scene::render() {
+	buffer = vector<Vector3f>(width * height);
+
+	int num = thread::hardware_concurrency();
+	//int num = 1;
+	int lines = height / num + 1;
+	if (lines > height) lines = height;
+	cout << "Thread nums: " << num << endl;
+	cout << "Lines per cpu: " << lines << endl;
+	cout << "Distrubute works..." << endl;
+	vector<thread> work;
+	for (int i = 0; i < num; ++i) {
+		cout << "Distrubte cpu " << i << endl;
+		int y0 = i * lines;
+		int y1 = min(y0 + lines, height);
+		work.push_back(thread(Scene::renderThread, this, y0, y1));
+		if (y1 == height) break;
+	}
+	cout << "Works start..." << endl;
+	for (int i = 0; i < work.size(); ++i) {
+		work[i].join();
+	}
+
+	ofstream img("result.ppm");
+	img << "P3\n" << width << " " << height << "\n255\n";
+	for (int i = height - 1; i >= 0; --i) {
+		for (int j = 0; j < width; ++j) {
+			int index = i * width + j;
+			int r = int(255.99 * buffer[index][0]);
+			int g = int(255.99 * buffer[index][1]);
+			int b = int(255.99 * buffer[index][2]);
+			img << r << " " << g << " " << b << endl;
+		}
+	}
+	img.close();
+}
+
+Vector3f Scene::color(const Ray3f& ray, int depth) {
+	HitRecord hrec;
+	if (bvh->hit(ray, 0.001f, FLT_MAX, hrec)) {
+		ScatterRecord srec;
+		Vector3f emitted = hrec.material->emitted(hrec.u, hrec.v, hrec.p);
+		if (depth < 50 && hrec.material->scatter(ray, hrec, srec)) {
+			if (srec.isSpecular) {
+				return srec.attenuation * color(srec.ray, depth + 1);
+			} else {
+				ObjectPdf pLight(&light, hrec.p);
+				MixturePdf pMix(&pLight, srec.pdf);
+				Ray3f scattered = Ray3f(hrec.p, pMix.generate(*samplerLight, *samplerRandom));
+				float pdfVal = pMix.value(scattered.direction());
+				return emitted + srec.attenuation * hrec.material->scatteringPdf(ray, hrec, scattered) * color(scattered, depth + 1) / pdfVal;
+			}
+		} else {
+			return emitted;
+		}
+	} else return Vector3f(0, 0, 0);
+}
+
+void Scene::buildCornellBox() {
 	Material* red = new Lambertian(new ConstantTexture(Vector3f(0.65f, 0.05f, 0.05f)));
 	Material* white = new Lambertian(new ConstantTexture(Vector3f(0.73f, 0.73f, 0.73f)));
 	Material* green = new Lambertian(new ConstantTexture(Vector3f(0.12f, 0.45f, 0.15f)));
@@ -45,7 +123,6 @@ void Scene::build() {
 	materials.push_back(gold);
 
 	light.add(new DiskXZ(Vector3f(278, 554, 278), 100, mLight));
-
 	world.add(new FlipNormalObject(new DiskXZ(Vector3f(278, 554, 278), 100, mLight)));
 
 	world.add(new FlipNormalObject(new RectangleYZ(0, 555, 0, 555, 555, green)));
@@ -53,7 +130,7 @@ void Scene::build() {
 	world.add(new FlipNormalObject(new RectangleXZ(0, 555, 0, 555, 555, white)));
 	world.add(new RectangleXZ(0, 555, 0, 555, 0, white));
 	world.add(new FlipNormalObject(new RectangleXY(0, 555, 0, 555, 555, white)));
-	
+
 	world.add(new Sphere(Vector3f(100, 50, 100), 50, alu));
 	world.add(new CylinderXZ(Vector3f(450, 0, 200), 50, 150, white));
 	world.add(new Sphere(Vector3f(450, 200, 200), 50, glass));
@@ -102,61 +179,29 @@ void Scene::build() {
 	camera = new Camera(Vector3f(278, 278, -800), Vector3f(278, 278, 0), Vector3f(0, 1, 0), 40.0f, float(width) / float(height));
 }
 
-void Scene::render() {
-	buffer = vector<Vector3f>(width * height);
+void Scene::buildSampler() {
+	Material* red = new Lambertian(new ConstantTexture(Vector3f(0.65f, 0.05f, 0.05f)));
+	Material* white = new Lambertian(new ConstantTexture(Vector3f(0.73f, 0.73f, 0.73f)));
+	Material* green = new Lambertian(new ConstantTexture(Vector3f(0.12f, 0.45f, 0.15f)));
+	Material* mLight = new DiffuseLight(new ConstantTexture(Vector3f(10, 10, 10)));
+	materials.push_back(red);
+	materials.push_back(white);
+	materials.push_back(green);
+	materials.push_back(mLight);
+	light.add(new DiskXZ(Vector3f(278, 554, 278), 100, mLight));
+	world.add(new FlipNormalObject(new DiskXZ(Vector3f(278, 554, 278), 100, mLight)));
 
-	int num = thread::hardware_concurrency();
-	//int num = 1;
-	int lines = height / num + 1;
-	cout << "Thread nums: " << num << endl;
-	cout << "Lines per cpu: " << lines << endl;
-	cout << "Distrubute works..." << endl;
-	vector<thread> work;
-	for (int i = 0; i < num; ++i) {
-		cout << "Distrubte cpu " << i << endl;
-		int y0 = i * lines;
-		int y1 = min(y0 + lines, height);
-		work.push_back(thread(Scene::renderThread, this, y0, y1));
-		if (y1 == height) break;
-	}
-	cout << "Works start..." << endl;
-	for (int i = 0; i < work.size(); ++i) {
-		work[i].join();
-	}
+	world.add(new FlipNormalObject(new RectangleYZ(0, 555, 0, 555, 555, green)));
+	world.add(new RectangleYZ(0, 555, 0, 555, 0, red));
+	world.add(new FlipNormalObject(new RectangleXZ(0, 555, 0, 555, 555, white)));
+	world.add(new RectangleXZ(0, 555, 0, 555, 0, white));
+	world.add(new FlipNormalObject(new RectangleXY(0, 555, 0, 555, 555, white)));
 
-	ofstream img("result.ppm");
-	img << "P3\n" << width << " " << height << "\n255\n";
-	for (int i = height - 1; i >= 0; --i) {
-		for (int j = 0; j < width; ++j) {
-			int index = i * width + j;
-			int r = int(255.99 * buffer[index][0]);
-			int g = int(255.99 * buffer[index][1]);
-			int b = int(255.99 * buffer[index][2]);
-			img << r << " " << g << " " << b << endl;
-		}
-	}
-	img.close();
-}
+	world.add(new CylinderXZ(Vector3f(450, 0, 200), 75, 200, white));
 
-Vector3f Scene::color(const Ray3f& ray, int depth) {
-	HitRecord hrec;
-	if (bvh->hit(ray, 0.001f, FLT_MAX, hrec)) {
-		ScatterRecord srec;
-		Vector3f emitted = hrec.material->emitted(hrec.u, hrec.v, hrec.p);
-		if (depth < 50 && hrec.material->scatter(ray, hrec, srec)) {
-			if (srec.isSpecular) {
-				return srec.attenuation * color(srec.ray, depth + 1);
-			} else {
-				ObjectPdf pLight(&light, hrec.p);
-				MixturePdf pMix(&pLight, srec.pdf);
-				Ray3f scattered = Ray3f(hrec.p, pMix.generate());
-				float pdfVal = pMix.value(scattered.direction());
-				return emitted + srec.attenuation * hrec.material->scatteringPdf(ray, hrec, scattered) * color(scattered, depth + 1) / pdfVal;
-			}
-		} else {
-			return emitted;
-		}
-	} else return Vector3f(0, 0, 0);
+	bvh = new BVHNode(world.getList(), world.size(), 0, 0);
+
+	camera = new Camera(Vector3f(278, 278, -800), Vector3f(278, 278, 0), Vector3f(0, 1, 0), 40.0f, float(width) / float(height));
 }
 
 void Scene::renderThread(Scene* scene, int y0, int y1) {
@@ -164,8 +209,9 @@ void Scene::renderThread(Scene* scene, int y0, int y1) {
 		for (int j = 0; j < scene->width; ++j) {
 			Vector3f col(0, 0, 0);
 			for (int s = 0; s < scene->spp; ++s) {
-				float u = (float(j) + frand()) / float(scene->width);
-				float v = (float(i) + frand()) / float(scene->height);
+				Vector2f uv = scene->samplerRandom->generate2D(1.0f, 1.0f);
+				float u = (float(j) + uv.x()) / float(scene->width);
+				float v = (float(i) + uv.y()) / float(scene->height);
 				Ray3f ray = scene->camera->getRay(u, v);
 				col += solveNaN(scene->color(ray, 0));
 			}

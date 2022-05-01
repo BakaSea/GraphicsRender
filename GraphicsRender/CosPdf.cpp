@@ -11,6 +11,6 @@ float CosPdf::value(const Vector3f& direction) const {
     return cosine / PI;
 }
 
-Vector3f CosPdf::generate() const {
+Vector3f CosPdf::generate(Sampler& sampler) const {
     return uvw.local(randomCosDirection());
 }

@@ -2,6 +2,7 @@
 #include <memory>
 #include "Ray.h"
 #include "AABB.h"
+#include "Sampler.h"
 using namespace std;
 
 class Material;
@@ -22,7 +23,7 @@ public:
 	virtual float pdfValue(const Ray3f& ray) const {
 		return 0;
 	}
-	virtual Vector3f random(const Vector3f& origin) const {
+	virtual Vector3f random(const Vector3f& origin, Sampler &sampler) const {
 		return Vector3f(1, 0, 0);
 	}
 };

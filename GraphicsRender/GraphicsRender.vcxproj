@@ -167,6 +167,10 @@
     <ClInclude Include="Pdf.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Rectangle.h" />
+    <ClInclude Include="Sampler.h" />
+    <ClInclude Include="SamplerBlueNoise.h" />
+    <ClInclude Include="SamplerRandom.h" />
+    <ClInclude Include="SamplerUniform.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="stb_image.h" />
@@ -197,6 +201,10 @@
     <ClCompile Include="ObjectList.cpp" />
     <ClCompile Include="ObjectPdf.cpp" />
     <ClCompile Include="Rectangle.cpp" />
+    <ClCompile Include="Sampler.cpp" />
+    <ClCompile Include="SamplerBlueNoise.cpp" />
+    <ClCompile Include="SamplerRandom.cpp" />
+    <ClCompile Include="SamplerUniform.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Triangle.cpp" />

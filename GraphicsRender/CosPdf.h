@@ -6,7 +6,7 @@ class CosPdf : public Pdf {
 public:
 	CosPdf(const Vector3f& w);
 	float value(const Vector3f& direction) const override;
-	Vector3f generate() const override;
+	Vector3f generate(Sampler& sampler) const override;
 
 private:
 	OnB uvw;

@@ -43,6 +43,12 @@
     <Filter Include="源文件\Util\Pdf">
       <UniqueIdentifier>{f6deba2a-8e31-4262-b466-fcdc2b85352c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Sampler">
+      <UniqueIdentifier>{8bf6f9e1-91bd-4931-9c20-92d1ff1a3d11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Sampler">
+      <UniqueIdentifier>{65d92080-dd39-4754-9f7a-d513ff4db068}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -144,6 +150,18 @@
     <ClInclude Include="Vector3.h">
       <Filter>头文件\Util</Filter>
     </ClInclude>
+    <ClInclude Include="Sampler.h">
+      <Filter>头文件\Sampler</Filter>
+    </ClInclude>
+    <ClInclude Include="SamplerUniform.h">
+      <Filter>头文件\Sampler</Filter>
+    </ClInclude>
+    <ClInclude Include="SamplerRandom.h">
+      <Filter>头文件\Sampler</Filter>
+    </ClInclude>
+    <ClInclude Include="SamplerBlueNoise.h">
+      <Filter>头文件\Sampler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
@@ -214,6 +232,18 @@
     </ClCompile>
     <ClCompile Include="Metal.cpp">
       <Filter>源文件\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Sampler.cpp">
+      <Filter>源文件\Sampler</Filter>
+    </ClCompile>
+    <ClCompile Include="SamplerUniform.cpp">
+      <Filter>源文件\Sampler</Filter>
+    </ClCompile>
+    <ClCompile Include="SamplerRandom.cpp">
+      <Filter>源文件\Sampler</Filter>
+    </ClCompile>
+    <ClCompile Include="SamplerBlueNoise.cpp">
+      <Filter>源文件\Sampler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

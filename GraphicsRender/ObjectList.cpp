@@ -36,9 +36,9 @@ float ObjectList::pdfValue(const Ray3f& ray) const {
     return sum;
 }
 
-Vector3f ObjectList::random(const Vector3f& origin) const {
+Vector3f ObjectList::random(const Vector3f& origin, Sampler& sampler) const {
     int index = int(frand() * size());
-    return list[index]->random(origin);
+    return list[index]->random(origin, sampler);
 }
 
 void ObjectList::enlarge() {
