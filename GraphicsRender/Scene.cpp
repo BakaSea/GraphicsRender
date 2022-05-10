@@ -98,7 +98,9 @@ Vector3f Scene::color(const Ray3f& ray, int depth) {
 				MixturePdf pMix(&pLight, srec.pdf);
 				Ray3f scattered = Ray3f(hrec.p, pMix.generate(*samplerLight, *samplerRandom));
 				float pdfVal = pMix.value(scattered.direction());
-				return emitted + srec.attenuation * hrec.material->scatteringPdf(ray, hrec, scattered) * color(scattered, depth + 1) / pdfVal;
+				float cosine = dot(hrec.normal, scattered.direction());
+				if (cosine < 0) return emitted;
+				return emitted + hrec.material->BRDF(hrec) * cosine * color(scattered, depth + 1) / pdfVal;
 			}
 		} else {
 			return emitted;

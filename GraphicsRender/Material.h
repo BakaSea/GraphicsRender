@@ -22,10 +22,10 @@ public:
 	virtual bool scatter(const Ray3f& ray, const HitRecord& hrec, ScatterRecord& srec) const {
 		return false;
 	}
-	virtual float scatteringPdf(const Ray3f& ray, const HitRecord& record, const Ray3f& scattered) const {
-		return false;
-	}
 	virtual Vector3f emitted(float u, float v, const Vector3f& p) const {
 		return Vector3f(0, 0, 0);
+	}
+	virtual Vector3f BRDF(const HitRecord& hrec) const {
+		return 0.0f;
 	}
 };

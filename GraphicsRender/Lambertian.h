@@ -9,7 +9,7 @@ public:
 		delete albedo;
 	}
 	virtual bool scatter(const Ray3f& ray, const HitRecord& hrec, ScatterRecord& srec) const override;
-	virtual float scatteringPdf(const Ray3f& ray, const HitRecord& record, const Ray3f& scattered) const override;
+	virtual Vector3f BRDF(const HitRecord& hrec) const override;
 
 private:
 	Texture* albedo;
