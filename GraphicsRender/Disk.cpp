@@ -4,7 +4,7 @@ bool DiskXZ::hit(const Ray3f& ray, float tMin, float tMax, HitRecord& record) co
     float t = (center.y() - ray.origin().y()) / ray.direction().y();
     if (t < tMin || t > tMax) return false;
     Vector3f p = ray.point(t);
-    if ((p - center).length() < radius) {
+    if ((p - center).length() <= radius) {
         //Need confirm u, v.
         record.u = 0;
         record.v = 0;
@@ -32,12 +32,15 @@ float DiskXZ::pdfValue(const Ray3f& ray) const {
 }
 
 Vector3f DiskXZ::random(const Vector3f& origin, Sampler& sampler) const {
-    Vector2f r;
-    float diam = 2 * radius - 0.1f;
-    do {
-        r = sampler.generate2D(diam, diam);
-        r -= Vector2f(diam / 2.0f, diam / 2.0f);
-    } while (r.length() >= diam / 2.0f);
-    Vector3f p = center + Vector3f(r.x(), 0, r.y());
+    Vector2f xy = sampler.generate2D([](Vector2f point) -> Vector2f {
+        float r = sqrt(point.x());
+        float theta = 2.0f * PI * point.y();
+        return Vector2f(r * cos(theta), r * sin(theta));
+    });
+    Vector3f p = center + Vector3f(xy.x(), 0, xy.y()) * radius;
     return p - origin;
+}
+
+float DiskXZ::pdfWeight() const {
+    return PI * radius * radius;
 }

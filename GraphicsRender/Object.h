@@ -26,4 +26,7 @@ public:
 	virtual Vector3f random(const Vector3f& origin, Sampler &sampler) const {
 		return Vector3f(1, 0, 0);
 	}
+	virtual float pdfWeight() const {
+		return 1;
+	}
 };

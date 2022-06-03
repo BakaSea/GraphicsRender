@@ -7,11 +7,8 @@
 struct HitRecord;
 
 struct ScatterRecord {
-	Ray3f ray;
-	bool isSpecular;
-	Vector3f attenuation;
 	Pdf* pdf;
-	ScatterRecord() : isSpecular(false), pdf(nullptr) {}
+	ScatterRecord() : pdf(nullptr) {}
 	~ScatterRecord() {
 		delete pdf;
 	}
@@ -25,7 +22,7 @@ public:
 	virtual Vector3f emitted(float u, float v, const Vector3f& p) const {
 		return Vector3f(0, 0, 0);
 	}
-	virtual Vector3f BRDF(const HitRecord& hrec) const {
+	virtual Vector3f BRDF(const HitRecord& hrec, const Vector3f& in, const Vector3f& out) const {
 		return 0.0f;
 	}
 };

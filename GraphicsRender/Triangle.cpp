@@ -1,4 +1,6 @@
 #include "Triangle.h"
+#include <iostream>
+using namespace std;
 
 Triangle::Triangle(const Vector3f& v0, const Vector3f& v1, const Vector3f& v2, Material* material)
 	: v0(v0), v1(v1), v2(v2), material(material) {
@@ -61,4 +63,27 @@ bool Triangle::getBoundingBox(float t0, float t1, AABB& box) const {
 			ffmax(v0.y(), ffmax(v1.y(), v2.y())),
 			ffmax(v0.z(), ffmax(v1.z(), v2.z()))));
 	return true;
+}
+
+float Triangle::pdfValue(const Ray3f& ray) const {
+	HitRecord record;
+	if (hit(ray, 0.001f, FLT_MAX, record)) {
+		float area = cross(e0, e1).length() / 2.0f;
+		float disSquared = record.t * record.t;
+		float cosine = fabs(dot(ray.direction(), record.normal));
+		return disSquared / (cosine * area);
+	} else return 0.0f;
+}
+
+Vector3f Triangle::random(const Vector3f& origin, Sampler& sampler) const {
+	Vector2f uv = sampler.generate2D([](Vector2f point) -> Vector2f {
+		float sqrtU = sqrt(point.x());
+		return Vector2f(1 - sqrtU, sqrtU * point.y());
+	});
+	Vector3f point = v0 + uv.x() * e0 + uv.y() * e1;
+	return point - origin;
+}
+
+float Triangle::pdfWeight() const {
+	return cross(e0, e1).length() / 2.0f;
 }

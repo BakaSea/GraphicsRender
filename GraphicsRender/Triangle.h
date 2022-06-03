@@ -9,6 +9,9 @@ public:
 	void setVertexNormal(const Vector3f& vn0, const Vector3f& vn1, const Vector3f& vn2);
 	bool hit(const Ray3f& ray, float tMin, float tMax, HitRecord& record) const override;
 	bool getBoundingBox(float t0, float t1, AABB& box) const override;
+	float pdfValue(const Ray3f& ray) const override;
+	Vector3f random(const Vector3f& origin, Sampler& sampler) const override;
+	float pdfWeight() const override;
 
 private:
 	Vector3f v0, v1, v2;

@@ -8,10 +8,10 @@ public:
 		e[0] = e0;
 		e[1] = e1;
 	}
-	inline T x() {
+	inline T x() const {
 		return e[0];
 	}
-	inline T y() {
+	inline T y() const {
 		return e[1];
 	}
 	inline const Vector2& operator + () const {
@@ -103,6 +103,12 @@ inline Vector2<T> cross(const Vector2<T>& v1, const Vector2<T>& v2) {
 template<class T>
 inline Vector2<T> normalize(const Vector2<T>& v) {
 	return v / v.length();
+}
+
+template<class T>
+inline bool operator < (const Vector2<T>& v1, const Vector2<T>& v2) {
+	if (v1.x() != v2.x()) return v1.x() < v2.x();
+	return v1.y() < v2.y();
 }
 
 typedef Vector2<float> Vector2f;

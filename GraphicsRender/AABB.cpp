@@ -10,7 +10,7 @@ bool AABB::hit(const Ray3f& ray, float tMin, float tMax) const {
 		}
 		tMin = ffmax(t0, tMin);
 		tMax = ffmin(t1, tMax);
-		if (tMax <= tMin) return false;
+		if (tMax < tMin) return false;
 	}
 	return true;
 }

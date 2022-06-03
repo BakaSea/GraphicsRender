@@ -109,4 +109,17 @@ inline Vector3<T> normalize(const Vector3<T>& v) {
 	return v / v.length();
 }
 
+template<class T>
+inline bool operator < (const Vector3<T>& v1, const Vector3<T>& v2) {
+	if (v1.x() != v2.x()) return v1.x() < v2.x();
+	if (v1.y() != v2.y()) return v1.y() < v2.y();
+	return v1.z() < v2.z();
+}
+
 typedef Vector3<float> Vector3f;
+
+inline bool operator == (const Vector3f& v1, const Vector3f& v2) {
+	if (fabs(v1.x() - v2.x()) > 1e-5) return false;
+	if (fabs(v1.y() - v2.y()) > 1e-5) return false;
+	return fabs(v1.z() - v2.z()) < 1e-5;
+}

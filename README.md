@@ -1,6 +1,4 @@
 # GraphicsRender
-The homework of rendering.
-
 ## Path Tracing
 
 Model:
@@ -8,13 +6,13 @@ Model:
 * Sangonomiya Kokomi/miHoYo/观海子
 * Bunny/Standford University
 
-1000x1000 spp2400:
+1000x1000 spp3000:
 
-![](1000x1000spp2400.png)
+![](imgsrc/1000x1000spp3000.png)
 
 2000x2000 spp3000:
 
-![](2000x2000spp3000.png)
+![](imgsrc/2000x2000spp3000.png)
 
 ## Sampler
 
@@ -24,12 +22,21 @@ Use different sampler in light sampling.
 
 ### Uniform
 
-![](uniform.png)
+![](imgsrc/uniform.png)
 
 ### Random
 
-![](random.png)
+![](imgsrc/random.png)
 
 ### Blue Noise
 
-![](bluenoise.png)
+![](imgsrc/bluenoise.png)
+
+## Microfacet Model & Multiple importance sampling
+
+| $\alpha$ |       BRDF Sampling       |      Light Sampling       | Multiple importance sampling |
+| :------: | :-----------------------: | :-----------------------: | :--------------------------: |
+|   0.01   | ![](imgsrc/brdf-0.01.png) | ![](imgsrc/light-0.01.png) |  ![](imgsrc/mis-0.01.png)   |
+|   0.1    | ![](imgsrc/brdf-0.1.png) | ![](imgsrc/light-0.1.png) |  ![](imgsrc/mis-0.1.png)   |
+|   0.2    | ![](imgsrc/brdf-0.2.png) | ![](imgsrc/light-0.2.png) |  ![](imgsrc/mis-0.2.png)   |
+

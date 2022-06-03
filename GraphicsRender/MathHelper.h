@@ -1,16 +1,21 @@
 #pragma once
 #include <stdlib.h>
+#include <random>
 #include "Vector3.h"
 #include "Vector2.h"
+using namespace std;
 
 const float PI = float(acos(-1.0));
+extern default_random_engine randEngine;
 
 inline static float frand() {
-	return float(rand()) / (float(RAND_MAX)+1.0f);
+	uniform_real_distribution<float> u(0, 1);
+	return u(randEngine);
 }
 
 inline static int irand(int mod) {
-	return rand() % mod;
+	uniform_int_distribution<int> u(0, mod - 1);
+	return u(randEngine);
 }
 
 inline Vector3f randomInUnitSphere() {
@@ -64,15 +69,15 @@ inline void swap(float& a, float& b) {
 	b = c;
 }
 
-inline Vector3f randomCosDirection() {
-	float r1 = frand();
-	float r2 = frand();
-	float z = float(sqrt(1 - r2));
-	float phi = 2 * PI * r1;
-	float x = float(cos(phi)) * 2 * float(sqrt(r2));
-	float y = float(sin(phi)) * 2 * float(sqrt(r2));
-	return Vector3f(x, y, z);
+inline Vector3f lerp(Vector3f y1, Vector3f y2, float weight) {
+	return y1 + (y2 - y1) * weight;
 }
+
+inline float lerp(float y1, float y2, float weight) {
+	return y1 + (y2 - y1) * weight;
+}
+
+Vector3f transformCosDirection(Vector2f point);
 
 inline Vector2f randomInUnitCircle() {
 	Vector2f p;

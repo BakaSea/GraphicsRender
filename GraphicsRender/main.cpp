@@ -1,10 +1,12 @@
-#include <stdlib.h>
 #include <time.h>
+#include <random>
+#include "MathHelper.h"
 #include "Scene.h"
-using namespace std;
+
+extern default_random_engine randEngine;
 
 int main() {
-	srand(time(0));
+	randEngine.seed(time(0));
 	Scene scene;
 	scene.build();
 	scene.render();

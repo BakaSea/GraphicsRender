@@ -72,9 +72,6 @@
     <ClInclude Include="Cylinder.h">
       <Filter>头文件\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Dielectric.h">
-      <Filter>头文件\Material</Filter>
-    </ClInclude>
     <ClInclude Include="Disk.h">
       <Filter>头文件\Object</Filter>
     </ClInclude>
@@ -87,9 +84,6 @@
     <ClInclude Include="ImageTexture.h">
       <Filter>头文件\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="Lambertian.h">
-      <Filter>头文件\Material</Filter>
-    </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>头文件\Material</Filter>
     </ClInclude>
@@ -98,9 +92,6 @@
     </ClInclude>
     <ClInclude Include="MeshTriangle.h">
       <Filter>头文件\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Metal.h">
-      <Filter>头文件\Material</Filter>
     </ClInclude>
     <ClInclude Include="MixturePdf.h">
       <Filter>头文件\Util\Pdf</Filter>
@@ -162,6 +153,18 @@
     <ClInclude Include="SamplerBlueNoise.h">
       <Filter>头文件\Sampler</Filter>
     </ClInclude>
+    <ClInclude Include="MicrofacetModel.h">
+      <Filter>头文件\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="GGX.h">
+      <Filter>头文件\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="GGXPdf.h">
+      <Filter>头文件\Util\Pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="SamplerRandomNP.h">
+      <Filter>头文件\Sampler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
@@ -212,25 +215,10 @@
     <ClCompile Include="ImageTexture.cpp">
       <Filter>源文件\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="CosPdf.cpp">
-      <Filter>源文件\Util\Pdf</Filter>
-    </ClCompile>
-    <ClCompile Include="MixturePdf.cpp">
-      <Filter>源文件\Util\Pdf</Filter>
-    </ClCompile>
     <ClCompile Include="ObjectPdf.cpp">
       <Filter>源文件\Util\Pdf</Filter>
     </ClCompile>
-    <ClCompile Include="Dielectric.cpp">
-      <Filter>源文件\Material</Filter>
-    </ClCompile>
     <ClCompile Include="DiffuseLight.cpp">
-      <Filter>源文件\Material</Filter>
-    </ClCompile>
-    <ClCompile Include="Lambertian.cpp">
-      <Filter>源文件\Material</Filter>
-    </ClCompile>
-    <ClCompile Include="Metal.cpp">
       <Filter>源文件\Material</Filter>
     </ClCompile>
     <ClCompile Include="Sampler.cpp">
@@ -243,6 +231,21 @@
       <Filter>源文件\Sampler</Filter>
     </ClCompile>
     <ClCompile Include="SamplerBlueNoise.cpp">
+      <Filter>源文件\Sampler</Filter>
+    </ClCompile>
+    <ClCompile Include="MathHelper.cpp">
+      <Filter>源文件\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="MicrofacetModel.cpp">
+      <Filter>源文件\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="GGX.cpp">
+      <Filter>源文件\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="GGXPdf.cpp">
+      <Filter>源文件\Util\Pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="SamplerRandomNP.cpp">
       <Filter>源文件\Sampler</Filter>
     </ClCompile>
   </ItemGroup>

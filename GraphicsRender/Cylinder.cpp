@@ -12,7 +12,7 @@ bool CylinderXZ::hit(const Ray3f& ray, float tMin, float tMax, HitRecord& record
             record.t = t;
             record.material = material;
             record.p = p;
-            record.normal = Vector3f(0, 1, 0);
+            record.normal = Vector3f(0, -1, 0);
             tMax = t;
             flag = true;
         }

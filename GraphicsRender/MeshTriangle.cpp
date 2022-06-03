@@ -3,6 +3,7 @@
 #include "tiny_obj_loader.h"
 #include <iostream>
 #include "Triangle.h"
+#include "GGX.h"
 using namespace tinyobj;
 
 MeshTriangle::MeshTriangle(const string& objPath, const Vector3f& center, const Vector3f& scale, Material* material) {
@@ -50,7 +51,7 @@ MeshTriangle::MeshTriangle(const string& objPath, const Vector3f& center, const 
 	bvh = new BVHNode(triangleList.getList(), triangleList.size(), 0, 0);
 }
 
-MeshTriangle::MeshTriangle(const string& objPath, const Vector3f& center, const Vector3f& scale, map<string, Material*> materialMap) {
+MeshTriangle::MeshTriangle(const string& objPath, const Vector3f& center, const Vector3f& scale, map<string, Texture*>& textureMap, vector<Material*>& materialList) {
 	ObjReader reader;
 	ObjReaderConfig config;
 	if (!reader.ParseFromFile(objPath, config)) {
@@ -92,7 +93,11 @@ MeshTriangle::MeshTriangle(const string& objPath, const Vector3f& center, const 
 			}
 			index += fv;
 			int mid = shapes[s].mesh.material_ids[f];
-			Material* material = materialMap[materials[mid].diffuse_texname];
+			Texture* texture = textureMap[materials[mid].diffuse_texname];
+			texture->setKd(Vector3f(materials[mid].diffuse[0], materials[mid].diffuse[1], materials[mid].diffuse[2]));
+			texture->setKs(Vector3f(materials[mid].specular[0], materials[mid].specular[1], materials[mid].specular[2]));
+			Material* material = new GGX(texture, Vector3f(0, 0, 0), 0, 1);
+			materialList.push_back(material);
 			Triangle* tri = new Triangle(vList[0], vList[1], vList[2], vtList[0], vtList[1], vtList[2], material);
 			if (!vnList.empty()) {
 				tri->setVertexNormal(vnList[0], vnList[1], vnList[2]);
@@ -113,4 +118,16 @@ bool MeshTriangle::hit(const Ray3f& ray, float tMin, float tMax, HitRecord& reco
 
 bool MeshTriangle::getBoundingBox(float t0, float t1, AABB& box) const {
 	return bvh->getBoundingBox(t0, t1, box);
+}
+
+float MeshTriangle::pdfValue(const Ray3f& ray) const {
+	return triangleList.pdfValue(ray);
+}
+
+Vector3f MeshTriangle::random(const Vector3f& origin, Sampler& sampler) const {
+	return triangleList.random(origin, sampler);
+}
+
+float MeshTriangle::pdfWeight() const {
+	return triangleList.pdfWeight();
 }
