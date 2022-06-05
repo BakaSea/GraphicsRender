@@ -66,9 +66,6 @@
     <ClInclude Include="ConstantTexture.h">
       <Filter>头文件\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="CosPdf.h">
-      <Filter>头文件\Util\Pdf</Filter>
-    </ClInclude>
     <ClInclude Include="Cylinder.h">
       <Filter>头文件\Object</Filter>
     </ClInclude>
@@ -92,9 +89,6 @@
     </ClInclude>
     <ClInclude Include="MeshTriangle.h">
       <Filter>头文件\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="MixturePdf.h">
-      <Filter>头文件\Util\Pdf</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>头文件\Object</Filter>

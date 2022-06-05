@@ -33,6 +33,7 @@ private:
 
 	void buildCornellBox();
 	void buildSampler();
-	void buildSampleLight();
+	void buildMIS();
+	void buildPolygonLight();
 	static void renderThread(Scene* scene, int y0, int y1);
 };

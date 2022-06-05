@@ -147,7 +147,6 @@
     <ClInclude Include="BVHNode.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ConstantTexture.h" />
-    <ClInclude Include="CosPdf.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="DiffuseLight.h" />
     <ClInclude Include="Disk.h" />
@@ -159,7 +158,6 @@
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="MeshTriangle.h" />
     <ClInclude Include="MicrofacetModel.h" />
-    <ClInclude Include="MixturePdf.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectList.h" />
     <ClInclude Include="ObjectPdf.h" />

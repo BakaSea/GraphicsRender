@@ -32,6 +32,12 @@ Use different sampler in light sampling.
 
 ![](imgsrc/bluenoise.png)
 
+## Polygon Light
+
+|     Quadrilateral      |         Pentagon         |         Hexagon         |
+| :--------------------: | :----------------------: | :---------------------: |
+| ![](imgsrc/square.png) | ![](imgsrc/pentagon.png) | ![](imgsrc/hexagon.png) |
+
 ## Microfacet Model & Multiple importance sampling
 
 | $\alpha$ |       BRDF Sampling       |      Light Sampling       | Multiple importance sampling |

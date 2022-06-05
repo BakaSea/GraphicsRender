@@ -11,7 +11,6 @@
 #include "GGX.h"
 #include "ConstantTexture.h"
 #include "ObjectPdf.h"
-#include "MixturePdf.h"
 #include "GGXPdf.h"
 #include "Triangle.h"
 #include "TriPyramid.h"
@@ -38,7 +37,8 @@ void Scene::build() {
 	}
 	buildCornellBox();
 	//buildSampler();
-	//buildSampleLight();
+	//buildPolygonLight();
+	//buildMIS();
 }
 
 void Scene::render() {
@@ -208,7 +208,7 @@ void Scene::buildSampler() {
 	camera = new Camera(Vector3f(278, 278, -800), Vector3f(278, 278, 0), Vector3f(0, 1, 0), 40.0f, float(width) / float(height));
 }
 
-void Scene::buildSampleLight() {
+void Scene::buildMIS() {
 	Material* mLight1 = new DiffuseLight(new ConstantTexture(Vector3f(1, 0, 0)));
 	Material* mLight2 = new DiffuseLight(new ConstantTexture(Vector3f(0, 1, 0)));
 	Material* mLight3 = new DiffuseLight(new ConstantTexture(Vector3f(0, 0, 1)));
@@ -243,6 +243,29 @@ void Scene::buildSampleLight() {
 	camera = new Camera(Vector3f(0, 2.5f, 12), Vector3f(0, 0, 0), Vector3f(0, 1, 0), 90.0f, float(width) / float(height));
 }
 
+void Scene::buildPolygonLight() {
+	Material* mLight = new DiffuseLight(new ConstantTexture(Vector3f(1, 1, 1)));
+	Material* white = new GGX(new ConstantTexture(Vector3f(1, 1, 1)), Vector3f(0, 0, 0), 0.6f, 0.2f);
+	Material* gold = new GGX(new ConstantTexture(Vector3f(1, 0.86f, 0.57f)), Vector3f(1.0f, 0.71f, 0.29f), 0.8f, 0.1f);
+	materials.push_back(mLight);
+	materials.push_back(white);
+	materials.push_back(gold);
+
+	//light.add(new FlipNormalObject(new MeshTriangle("square.obj", Vector3f(0, 2.5f, 0), Vector3f(1, 1, 1), mLight)));
+	//world.add(new FlipNormalObject(new MeshTriangle("square.obj", Vector3f(0, 2.5f, 0), Vector3f(1, 1, 1), mLight)));
+	//light.add(new FlipNormalObject(new MeshTriangle("pentagon.obj", Vector3f(0, 2.5f, 0), Vector3f(1, 1, 1), mLight)));
+	//world.add(new FlipNormalObject(new MeshTriangle("pentagon.obj", Vector3f(0, 2.5f, 0), Vector3f(1, 1, 1), mLight)));
+	light.add(new FlipNormalObject(new MeshTriangle("hexagon.obj", Vector3f(0, 2.5f, 0), Vector3f(1, 1, 1), mLight)));
+	world.add(new FlipNormalObject(new MeshTriangle("hexagon.obj", Vector3f(0, 2.5f, 0), Vector3f(1, 1, 1), mLight)));
+
+	world.add(new RectangleXZ(-100, 100, -100, 100, 0, white));
+	world.add(new Sphere(Vector3f(0.75f, 1, 0.5f), 1, gold));
+	world.add(new RectangleYZ(0, 2, -1, 2, -1.25f, white));
+
+	bvh = new BVHNode(world.getList(), world.size(), 0, 0);
+	camera = new Camera(Vector3f(0, 1.25f, 4), Vector3f(0, 1.25f, 0), Vector3f(0, 1, 0), 90.0f, float(width) / float(height));
+}
+
 void Scene::renderThread(Scene* scene, int y0, int y1) {
 	Sampler* samplerLight, * samplerDefault;
 	switch (scene->cLight) {
@@ -263,7 +286,6 @@ void Scene::renderThread(Scene* scene, int y0, int y1) {
 				float u = (float(j) + uv.x()) / float(scene->width);
 				float v = (float(i) + uv.y()) / float(scene->height);
 				Ray3f ray = scene->camera->getRay(u, v);
-				//col += scene->color(ray, 0, *samplerLight, *samplerDefault);
 				col += solveNaN(scene->color(ray, 0, *samplerLight, *samplerDefault));
 			}
 			col /= float(scene->spp);
