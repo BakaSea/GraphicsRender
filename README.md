@@ -42,7 +42,7 @@ Use different sampler in light sampling.
 
 | $\alpha$ |       BRDF Sampling       |      Light Sampling       | Multiple importance sampling |
 | :------: | :-----------------------: | :-----------------------: | :--------------------------: |
-|   0.01   | ![](imgsrc/brdf-0.01.png) | ![](imgsrc/light-0.01.png) |  ![](imgsrc/mis-0.01.png)   |
-|   0.1    | ![](imgsrc/brdf-0.1.png) | ![](imgsrc/light-0.1.png) |  ![](imgsrc/mis-0.1.png)   |
-|   0.2    | ![](imgsrc/brdf-0.2.png) | ![](imgsrc/light-0.2.png) |  ![](imgsrc/mis-0.2.png)   |
+|   0.01   | ![](https://raw.githubusercontent.com/BakaSea/GraphicsRender/main/imgsrc/brdf-0.01.png) | ![](https://raw.githubusercontent.com/BakaSea/GraphicsRender/main/imgsrc/light-0.01.png) |  ![](https://raw.githubusercontent.com/BakaSea/GraphicsRender/main/imgsrc/mis-0.01.png)   |
+|   0.1    | ![](https://raw.githubusercontent.com/BakaSea/GraphicsRender/main/imgsrc/brdf-0.1.png) | ![](https://raw.githubusercontent.com/BakaSea/GraphicsRender/main/imgsrc/light-0.1.png) |  ![](https://raw.githubusercontent.com/BakaSea/GraphicsRender/main/imgsrc/mis-0.1.png)   |
+|   0.2    | ![](https://raw.githubusercontent.com/BakaSea/GraphicsRender/main/imgsrc/brdf-0.2.png) | ![](https://raw.githubusercontent.com/BakaSea/GraphicsRender/main/imgsrc/light-0.2.png) |  ![](https://raw.githubusercontent.com/BakaSea/GraphicsRender/main/imgsrc/mis-0.2.png)   |
 
